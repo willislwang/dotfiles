@@ -32,6 +32,9 @@ set conceallevel=2
 set mouse=a
 let mapleader = ';'
 
+" TEMP UNTIL I GET IT FIXED
+set clipboard=unnamedplus
+
 " Colors
 set background=dark
 " colorscheme onedark
