@@ -71,6 +71,7 @@ ZSH_THEME="robbyrussell"
 plugins=(
     git
     zsh-autosuggestions
+    zsh-syntax-highlighting
 )
 source $ZSH/oh-my-zsh.sh
 
@@ -102,4 +103,4 @@ source $ZSH/oh-my-zsh.sh
 
 alias n=nvim
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh 
