@@ -34,6 +34,9 @@ set conceallevel=2
 set mouse=a
 let mapleader = ';'
 
+hi Pmenu ctermfg=NONE ctermbg=238 cterm=NONE guifg=NONE guibg=#64666d gui=NONE
+hi PmenuSel ctermfg=NONE ctermbg=44 cterm=NONE guifg=NONE guibg=#204a87 gui=NONE
+
 " Set default clipboard
 set clipboard=unnamedplus
 
