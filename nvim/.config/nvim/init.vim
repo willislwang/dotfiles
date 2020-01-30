@@ -5,8 +5,15 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 Plug 'deoplete-plugins/deoplete-go', { 'for': 'go' }
 Plug 'fatih/vim-go', { 'for': 'go' }
+" NerdTree
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle'}
+Plug 'Xuyuanp/nerdtree-git-plugin'
+" Looks
 Plug 'joshdick/onedark.vim'
+Plug 'chriskempson/base16-vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'mhinz/vim-signify'
 call plug#end()
 
 " Change clang binary path
@@ -42,8 +49,18 @@ hi PmenuSel ctermfg=NONE ctermbg=44 cterm=NONE guifg=NONE guibg=#204a87 gui=NONE
 set clipboard=unnamedplus
 
 " Colors
-set background=dark
+let base16colorspace=256
+colorscheme base16-tomorrow
 " colorscheme onedark
+
+" Status Bar
+let g:airline_theme='deus'
+let g:airline#extensions#tabline#enabled = 1
+set noshowmode
+set noruler
+set laststatus=0
+set noshowcmd
+set cmdheight=1
 
 "Deoplete
 set completeopt+=noinsert
@@ -62,6 +79,11 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 " close when only nerdtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif 
+
+" Vim Buffer switch
+map <leader>n :bn<cr>
+map <leader>p :bp<cr>
+map <leader>d :bd<cr>  
 
 " Language Server
 let g:LanguageClient_serverCommands = {
