@@ -13,6 +13,8 @@ Plug 'joshdick/onedark.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'junegunn/fzf', { 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 Plug 'mhinz/vim-signify'
 call plug#end()
 
@@ -92,6 +94,10 @@ let g:LanguageClient_serverCommands = {
     \ 'c': ['ccls'],
     \ 'go': ['gopls'],
     \ } 
+
+" FZF
+nnoremap <C-Space> :FZF<CR>
+nnoremap <C-g> :Rg<CR>
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
