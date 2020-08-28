@@ -15,12 +15,16 @@ yabai -m config left_padding    "${gaps_left}"
 yabai -m config right_padding   "${gaps_right}"
 yabai -m config window_gap      "${gaps_inner}"
 
-
 yabai -m config active_window_opacity       1.0
 yabai -m config normal_window_opacity       0.9
 yabai -m config split_ratio                 0.5
 yabai -m config auto_balance                off
 
+yabai -m config insert_feedback_color        0xaad75f5f
+yabai -m config mouse_follows_focus          on
+yabai -m config focus_follows_mouse          autofocus
 # ========= Rules ==================
 
 yabai -m rule --add app=Adobe Acrobat manage=on
+yabai -m rule --add label="dota2" app="^Dota 2$" manage=off
+yabai -m rule --add label="Steam" app="^Steam$" manage=off
