@@ -1,5 +1,5 @@
-# dotfiles
-Mac Dotfiles!
+# Dotfiles
+My MacOS Dotfiles! Check the wiki [incomplete] for all plugins and installations needed. 
 
 
 
