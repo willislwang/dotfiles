@@ -1,3 +1,6 @@
+sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+#
 # ========= Variables ==============
 # Set padding and gaps
 gaps_top="20"
@@ -21,8 +24,6 @@ yabai -m config split_ratio                 0.5
 yabai -m config auto_balance                off
 
 yabai -m config insert_feedback_color        0xaad75f5f
-yabai -m config mouse_follows_focus          on
-yabai -m config focus_follows_mouse          autofocus
 # ========= Rules ==================
 
 yabai -m rule --add app=Adobe Acrobat manage=on
