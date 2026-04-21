@@ -47,6 +47,12 @@ if [[ ! -d "$HOME/.config/base16-shell" ]]; then
   git clone https://github.com/tinted-theming/base16-shell.git "$HOME/.config/base16-shell"
 fi
 
+# Set zsh as default shell
+if [[ "$SHELL" != "$(which zsh)" ]]; then
+  echo "==> Setting zsh as default shell..."
+  chsh -s "$(which zsh)"
+fi
+
 # Symlink zsh config (oh-my-zsh install may have written a new .zshrc, overwrite it)
 echo "==> Linking zsh config..."
 ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
