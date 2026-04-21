@@ -73,5 +73,31 @@ if [[ "$OS" == "macos" ]]; then
   ln -sf "$DOTFILES/yabai/.skhdrc" "$HOME/.skhdrc"
 fi
 
+# WSL2: apply Tomorrow Night to Windows Terminal
+if grep -qi microsoft /proc/version 2>/dev/null; then
+  WT_SETTINGS=$(find /mnt/c/Users/*/AppData/Local/Packages/Microsoft.WindowsTerminal_*/LocalState/settings.json 2>/dev/null | head -1)
+  if [[ -n "$WT_SETTINGS" ]]; then
+    echo "==> Configuring Windows Terminal..."
+    if ! command -v jq &>/dev/null; then
+      sudo apt-get install -y jq
+    fi
+    TOMORROW_NIGHT='{
+      "name": "Tomorrow Night",
+      "background": "#1D1F21", "foreground": "#C5C8C6",
+      "cursorColor": "#C5C8C6", "selectionBackground": "#373B41",
+      "black": "#1D1F21", "red": "#CC6666", "green": "#B5BD68",
+      "yellow": "#F0C674", "blue": "#81A2BE", "purple": "#B294BB",
+      "cyan": "#8ABEB7", "white": "#C5C8C6",
+      "brightBlack": "#969896", "brightRed": "#CC6666", "brightGreen": "#B5BD68",
+      "brightYellow": "#F0C674", "brightBlue": "#81A2BE", "brightPurple": "#B294BB",
+      "brightCyan": "#8ABEB7", "brightWhite": "#FFFFFF"
+    }'
+    jq --argjson scheme "$TOMORROW_NIGHT" '
+      .schemes = ((.schemes // []) | map(select(.name != "Tomorrow Night")) + [$scheme]) |
+      .profiles.defaults.colorScheme = "Tomorrow Night"
+    ' "$WT_SETTINGS" > "$WT_SETTINGS.tmp" && mv "$WT_SETTINGS.tmp" "$WT_SETTINGS"
+  fi
+fi
+
 echo ""
 echo "Done! Run: exec zsh"
