@@ -52,8 +52,10 @@ hi PmenuSel ctermfg=NONE ctermbg=44 cterm=NONE guifg=NONE guibg=#204a87 gui=NONE
 set clipboard=unnamedplus
 
 " Colors
+set termguicolors
 let base16colorspace=256
-colorscheme base16-tomorrow
+colorscheme base16-tomorrow-night
+highlight SignColumn guibg=NONE
 " colorscheme onedark
 
 " Status Bar
