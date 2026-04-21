@@ -61,10 +61,22 @@ ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 echo "==> Linking tmux config..."
 ln -sf "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
 
+# Install vim-plug
+PLUG_PATH="$HOME/.local/share/nvim/site/autoload/plug.vim"
+if [[ ! -f "$PLUG_PATH" ]]; then
+  echo "==> Installing vim-plug..."
+  curl -fLo "$PLUG_PATH" --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
 # Symlink nvim config
 echo "==> Linking nvim config..."
 mkdir -p "$HOME/.config"
 ln -sf "$DOTFILES/nvim/.config/nvim" "$HOME/.config/nvim"
+
+# Install nvim plugins
+echo "==> Installing nvim plugins..."
+nvim --headless +PlugInstall +qall 2>/dev/null
 
 # Merge git aliases via [include] so we don't overwrite credential helpers
 echo "==> Merging git config..."
