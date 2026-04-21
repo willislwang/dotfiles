@@ -50,7 +50,7 @@ fi
 # Set zsh as default shell
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   echo "==> Setting zsh as default shell..."
-  chsh -s "$(which zsh)"
+  chsh -s "$(which zsh)" || echo "    Run manually: chsh -s $(which zsh)"
 fi
 
 # Symlink zsh config (oh-my-zsh install may have written a new .zshrc, overwrite it)
@@ -60,6 +60,16 @@ ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 # Symlink tmux config
 echo "==> Linking tmux config..."
 ln -sf "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
+
+# Install neovim
+if ! command -v nvim &>/dev/null; then
+  echo "==> Installing neovim..."
+  if [[ "$OS" == "linux" ]]; then
+    sudo apt-get install -y neovim
+  elif [[ "$OS" == "macos" ]]; then
+    brew install neovim
+  fi
+fi
 
 # Install vim-plug
 PLUG_PATH="$HOME/.local/share/nvim/site/autoload/plug.vim"
