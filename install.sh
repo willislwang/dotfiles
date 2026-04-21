@@ -41,6 +41,12 @@ if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]]; then
   git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 fi
 
+# Install base16-shell
+if [[ ! -d "$HOME/.config/base16-shell" ]]; then
+  echo "==> Installing base16-shell..."
+  git clone https://github.com/tinted-theming/base16-shell.git "$HOME/.config/base16-shell"
+fi
+
 # Symlink zsh config (oh-my-zsh install may have written a new .zshrc, overwrite it)
 echo "==> Linking zsh config..."
 ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
