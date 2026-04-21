@@ -16,7 +16,11 @@ Plug 'mhinz/vim-signify'
 call plug#end()
 
 " Change clang binary path
-call deoplete#custom#var('clangx', 'clang_binary', '/usr/local/bin/clang')
+if has('mac')
+  call deoplete#custom#var('clangx', 'clang_binary', '/usr/local/bin/clang')
+else
+  call deoplete#custom#var('clangx', 'clang_binary', 'clang')
+endif
 
 " Change clang options
 call deoplete#custom#var('clangx', 'default_c_options', '')
