@@ -94,6 +94,12 @@ if ! grep -qF "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig" 2>/dev/null; then
   printf '\n[include]\n\tpath = %s/git/.gitconfig\n' "$DOTFILES" >> "$HOME/.gitconfig"
 fi
 
+# Symlink agent instructions (one source of truth for all coding agents)
+echo "==> Linking agent instructions..."
+ln -sf "$DOTFILES/AGENTS.md" "$HOME/AGENTS.md"
+mkdir -p "$HOME/.claude"
+ln -sf "$DOTFILES/AGENTS.md" "$HOME/.claude/CLAUDE.md"
+
 # macOS-only configs
 if [[ "$OS" == "macos" ]]; then
   echo "==> Linking yabai/skhd config..."
