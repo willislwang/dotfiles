@@ -2,6 +2,17 @@
 
 These are common instructions for Willis's agents across all scenarios.
 
+## Response Style
+
+- Keep responses short, direct, and to the point.
+  Lead with the answer or the outcome, then add only the context I need to act on it.
+- Never drop important context for the sake of brevity.
+  Caveats, risks, tradeoffs, assumptions you made, and parts of my request you did not do must always be stated, even if that makes the response longer.
+- Skip preamble, restating my request, and recaps of work the diff or command output already shows.
+- Prefer short prose or tight bullets over long explanations.
+  No filler, no praise, no padding.
+- If something is uncertain or unverified, say so once and plainly instead of hedging throughout.
+
 ## General Guidelines
 
 - Never use the em dash "—". Use plain dash "-" instead.
