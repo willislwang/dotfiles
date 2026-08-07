@@ -1,18 +1,18 @@
 " vim-plug plugins
 call plug#begin('~/.local/share/nvim/plugged')
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', { 'commit': '103a88198604a408f7624c33472210cfafce6132', 'do': 'bash install.sh' }
+Plug 'Shougo/deoplete.nvim', { 'commit': 'e5a47d4a2f0b2b6f568e708163e2354097e611c6', 'do': ':UpdateRemotePlugins' }
 " NerdTree
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle'}
-Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'scrooloose/nerdtree', { 'commit': '690d061b591525890f1471c6675bcb5bdc8cdff9', 'on': 'NERDTreeToggle'}
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'commit': 'e1fe727127a813095854a5b063c15e955a77eafb' }
 " Looks
-Plug 'joshdick/onedark.vim'
-Plug 'chriskempson/base16-vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'junegunn/fzf', { 'do': './install --bin' }
-Plug 'junegunn/fzf.vim'
-Plug 'mhinz/vim-signify'
+Plug 'joshdick/onedark.vim', { 'commit': '47bec7a6196a843dad195d2666c3ac84c6e80c78' }
+Plug 'chriskempson/base16-vim', { 'commit': '3be3cd82cd31acfcab9a41bad853d9c68d30478d' }
+Plug 'vim-airline/vim-airline', { 'commit': 'a2fefe599378b4a493287d10501f51e224753690' }
+Plug 'vim-airline/vim-airline-themes', { 'commit': '77aab8c6cf7179ddb8a05741da7e358a86b2c3ab' }
+Plug 'junegunn/fzf', { 'commit': '3337be9d450cd349e99273a2d3985ceaf5f3753f', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim', { 'commit': 'd2a59a992a2455f609c0fde2ebd84427ea8f919a' }
+Plug 'mhinz/vim-signify', { 'commit': '3b5ae37eb2b77c3ae58d60dfdc3fc30258078663' }
 call plug#end()
 
 " Change clang binary path
@@ -107,4 +107,3 @@ nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
