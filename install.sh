@@ -8,8 +8,9 @@ OH_MY_ZSH_REVISION="0912e05c0589d26ea20d79555487900880aad4d5"
 ZSH_AUTOSUGGESTIONS_REVISION="85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5"
 ZSH_SYNTAX_HIGHLIGHTING_REVISION="1d85c692615a25fe2293bdd44b34c217d5d2bf04"
 BASE16_SHELL_REVISION="5c54546e8d349819bdc2854143b815842dee042d"
-VIM_PLUG_REVISION="88e31471818e9a29a8a20a0ee61360cfd7bdc1cd"
-VIM_PLUG_SHA256="7e2b20cd909da9c456498684c98f03c63829170f01e34595dd8e1818a217d37c"
+NEOVIM_VERSION="0.12.4"
+NEOVIM_LINUX_X86_64_SHA256="012bf3fcac5ade43914df3f174668bf64d05e049a4f032a388c027b1ebd78628"
+NEOVIM_LINUX_ARM64_SHA256="ceb7e88c6b681f0515d135dcdfad54f5eb4373b25ce6172197cd9a69c758063f"
 
 fail() {
   printf 'Error: %s\n' "$*" >&2
@@ -71,7 +72,7 @@ backup_existing_target() {
   local backup
   local suffix=1
 
-  [[ -e "$target" || -L "$target" ]] || return
+  [[ -e "$target" || -L "$target" ]] || return 0
 
   backup="${target}.backup-$(date +%Y%m%d%H%M%S)"
   while [[ -e "$backup" || -L "$backup" ]]; do
@@ -119,38 +120,53 @@ install_pinned_repo() {
   [[ "$(git -C "$destination" rev-parse HEAD)" == "$revision" ]] || fail "could not verify $repository revision"
 }
 
-sha256_file() {
-  local output
-
-  if command -v sha256sum &>/dev/null; then
-    output="$(sha256sum "$1")"
-  elif command -v shasum &>/dev/null; then
-    output="$(shasum -a 256 "$1")"
-  else
-    fail "sha256sum or shasum is required to verify downloads"
-  fi
-  printf '%s\n' "${output%% *}"
-}
-
-install_verified_file() {
-  local url="$1"
-  local checksum="$2"
-  local destination="$3"
-  local temporary
-
-  if [[ -f "$destination" && "$(sha256_file "$destination")" == "$checksum" ]]; then
+install_neovim() {
+  if [[ "$OS" == "macos" ]]; then
+    ensure_command nvim neovim
     return
   fi
 
-  temporary="$(mktemp "${TMPDIR:-/tmp}/dotfiles-download.XXXXXX")"
-  curl --fail --location --show-error --silent --output "$temporary" "$url"
-  [[ "$(sha256_file "$temporary")" == "$checksum" ]] || fail "checksum verification failed for $url"
+  local architecture
+  local asset
+  local checksum
+  local install_dir="$HOME/.local/opt/nvim-$NEOVIM_VERSION"
 
-  if [[ -e "$destination" || -L "$destination" ]]; then
-    backup_existing_target "$destination"
+  case "$(uname -m)" in
+    x86_64) architecture="x86_64" ;;
+    aarch64|arm64) architecture="arm64" ;;
+    *) fail "unsupported Linux architecture for Neovim: $(uname -m)" ;;
+  esac
+
+  asset="nvim-linux-$architecture"
+  if [[ "$architecture" == "x86_64" ]]; then
+    checksum="$NEOVIM_LINUX_X86_64_SHA256"
+  else
+    checksum="$NEOVIM_LINUX_ARM64_SHA256"
   fi
-  mkdir -p "$(dirname "$destination")"
-  mv "$temporary" "$destination"
+
+  if [[ ! -x "$install_dir/bin/nvim" ]]; then
+    ensure_command tar tar
+    ensure_command sha256sum coreutils
+
+    (
+      local archive="$(mktemp)"
+      local extraction_dir="$(mktemp -d)"
+      trap 'rm -rf "$archive" "$extraction_dir"' EXIT
+
+      printf '==> Downloading Neovim v%s...\n' "$NEOVIM_VERSION"
+      curl --fail --location --retry 3 --output "$archive" \
+        "https://github.com/neovim/neovim/releases/download/v$NEOVIM_VERSION/$asset.tar.gz"
+      printf '%s  %s\n' "$checksum" "$archive" | sha256sum --check --status || fail "Neovim checksum verification failed"
+      tar -C "$extraction_dir" -xzf "$archive"
+      [[ -x "$extraction_dir/$asset/bin/nvim" ]] || fail "Neovim archive did not contain nvim"
+
+      mkdir -p "$(dirname "$install_dir")"
+      backup_existing_target "$install_dir"
+      mv "$extraction_dir/$asset" "$install_dir"
+    )
+  fi
+
+  link_file "$install_dir/bin/nvim" "$HOME/.local/bin/nvim"
 }
 
 login_shell() {
@@ -164,6 +180,19 @@ login_shell() {
     printf '%s\n' "${account#UserShell: }"
   fi
 }
+
+if [[ $# -gt 0 ]]; then
+  case "$1" in
+    --nvim)
+      [[ $# -eq 1 ]] || fail "usage: $0 --nvim"
+      echo "==> Detected OS: $OS"
+      ensure_command curl curl
+      install_neovim
+      exit 0
+      ;;
+    *) fail "usage: $0 [--nvim]" ;;
+  esac
+fi
 
 echo "==> Detected OS: $OS"
 
@@ -202,17 +231,11 @@ link_file "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 echo "==> Linking tmux config..."
 link_file "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
 
-ensure_command nvim neovim
-
-PLUG_PATH="$HOME/.local/share/nvim/site/autoload/plug.vim"
-echo "==> Installing vim-plug..."
-install_verified_file "https://raw.githubusercontent.com/junegunn/vim-plug/$VIM_PLUG_REVISION/plug.vim" "$VIM_PLUG_SHA256" "$PLUG_PATH"
+install_neovim
+ensure_command rg ripgrep
 
 echo "==> Linking nvim config..."
 link_file "$DOTFILES/nvim/.config/nvim" "$HOME/.config/nvim"
-
-echo "==> Installing nvim plugins..."
-nvim --headless +'PlugInstall --sync' +qall
 
 echo "==> Merging git config..."
 GIT_CONFIG="$DOTFILES/git/.gitconfig"
